@@ -1,3 +1,4 @@
+//src/app/page.tsx
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCurrentUser } from "@/app/data/user/auth";
