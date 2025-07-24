@@ -109,8 +109,8 @@ export function CreateTaskDialogContent({ children, users }: CreateTaskDialogCon
         form.reset();
         router.refresh();
       }
-    } catch (error: any) {
-      setError(error.message || "Failed to create task");
+    } catch (error) {
+      setError(`Failed to create task with error ${error}`);
     } finally {
       setIsLoading(false);
     }
