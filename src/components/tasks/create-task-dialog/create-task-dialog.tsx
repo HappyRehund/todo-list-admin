@@ -34,7 +34,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { UserRole } from "@/generated/prisma";
+import { UserRole } from "@/generated/prisma"; 
 
 interface User {
   id: string;
