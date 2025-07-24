@@ -32,7 +32,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateTask } from "@/actions/tasks/task-action";
-import { UserRole } from "@/generated/prisma/enums"; 
+import { UserRole } from "../../../../prisma/app/generated/prisma/client/enums"; 
 
 interface User {
   id: string;

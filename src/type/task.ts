@@ -1,4 +1,4 @@
-import { Prisma } from "@/generated/prisma/client" 
+import { Prisma } from "../../prisma/app/generated/prisma/client/client" 
 
 export type Task = Prisma.TaskGetPayload<{
   include: {

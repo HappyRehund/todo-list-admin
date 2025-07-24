@@ -33,7 +33,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { UserRole } from "@/generated/prisma/enums";
+import { UserRole } from "../../../../prisma/app/generated/prisma/client/enums";
 
 interface User {
   id: string;
