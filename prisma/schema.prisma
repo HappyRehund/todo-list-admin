@@ -1,0 +1,59 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  user
+}
+
+enum TaskStatus {
+  pending
+  completed
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  email     String   @unique
+  password  String?
+  salt      String?
+  role      UserRole @default(user)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+
+  assignedTasks Task[] @relation("AssignedTo")
+  createdTasks  Task[] @relation("CreatedBy")
+
+  @@map("user")
+}
+
+model Task {
+  id          String     @id @default(uuid()) @db.Uuid
+  title       String
+  description String?
+  status      TaskStatus @default(pending)
+  deadline    DateTime?  @db.Timestamptz(6)
+  createdAt   DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime   @updatedAt @db.Timestamptz(6)
+
+  // Foreign Keys
+  assignedToId String @db.Uuid
+  createdById  String @db.Uuid
+
+  // Relations
+  assignedTo User @relation("AssignedTo", fields: [assignedToId], references: [id], onDelete: Cascade)
+  createdBy  User @relation("CreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([deadline])
+  @@index([createdAt])
+  @@map("task")
+}
