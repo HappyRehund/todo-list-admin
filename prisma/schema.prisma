@@ -1,8 +1,8 @@
 // prisma/schema.prisma
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  provider      = "prisma-client"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-1.1.x"]
 }
 
 datasource db {
@@ -22,8 +22,8 @@ enum TaskStatus {
 
 model User {
   id        String   @id @default(uuid()) @db.Uuid
-  name      String   
-  email     String   @unique 
+  name      String
+  email     String   @unique
   password  String?
   salt      String?
   role      UserRole @default(user)
