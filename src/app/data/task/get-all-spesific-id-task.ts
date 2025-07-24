@@ -2,8 +2,9 @@
 import "server-only";
 import { prisma } from "@/lib/client/prisma";
 import { getCurrentUser } from "../user/auth";
+import { TasksResponse } from "@/type/task";
 
-export async function getMyTasks() {
+export async function getMyTasks(): Promise<TasksResponse> {
   const user = await getCurrentUser({ redirectIfNotFound: true });
   
   try {
@@ -30,9 +31,9 @@ export async function getMyTasks() {
       orderBy: [{ status: "asc" }, { deadline: "asc" }, { createdAt: "desc" }],
     });
 
-    return { success: true, data: tasks };
+    return { status: "OK", data: tasks, message: "Find All Tasks Success" };
   } catch (error) {
     console.error("Error fetching tasks:", error);
-    return { success: false, error: "Failed to fetch tasks" };
+    return { status: "ERR", message: "Failed to fetch tasks" };
   }
 }

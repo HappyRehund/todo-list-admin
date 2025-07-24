@@ -30,7 +30,7 @@ export async function createTask(
     const { success, data } = createTaskSchema.safeParse(unsafeData);
 
     if (!success) {
-      return { status: "OK", message: "Invalid task data" };
+      return { status: "ERR", message: "Invalid task data" };
     }
 
     await prisma.$transaction(async (tx) => {

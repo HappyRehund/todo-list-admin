@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SignUpForm } from "@/modules/auth/sign-up-form";
+import { SignUpForm } from "@/components/auth/sign-up-form";
 
 export default function SignUp() {
   return (

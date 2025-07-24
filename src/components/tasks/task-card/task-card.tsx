@@ -25,7 +25,7 @@ import {
 import { useState } from "react";
 import { UpdateTaskDialogContent } from "../update-task-dialog/update-task-dialog";
 import { useRouter } from "next/navigation";
-import { UserRole } from "@/generated/prisma";
+import { UserRole } from "@/generated/prisma/enums"; 
 
 interface User {
   id: string;
@@ -85,7 +85,7 @@ export function TaskCardClient({ task, currentUser, users }: TaskCardClientProps
         router.refresh();
       }
     } catch (error) {
-      alert("Failed to complete task");
+      alert(`Failed to complete task with error : ${error}`);
     } finally {
       setIsLoading(false);
     }
@@ -103,7 +103,7 @@ export function TaskCardClient({ task, currentUser, users }: TaskCardClientProps
         router.refresh();
       }
     } catch (error) {
-      alert("Failed to delete task");
+      alert(`Failed to delete task with error : ${error}`);
     } finally {
       setIsLoading(false);
     }

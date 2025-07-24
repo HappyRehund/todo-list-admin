@@ -2,7 +2,7 @@
 import "server-only"
 import { prisma } from "@/lib/client/prisma";
 import { getCurrentUser } from "./auth";
-import { UserRole } from "@/generated/prisma";
+import { UserRole } from "@/generated/prisma/enums"; 
 
 interface ReturnAllUsers {
     id: string

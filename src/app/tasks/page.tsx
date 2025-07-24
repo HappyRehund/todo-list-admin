@@ -3,22 +3,25 @@ import { Button } from "@/components/ui/button";
 import { getMyTasks } from "../data/task/get-all-spesific-id-task";
 import { getAllTasks } from "../data/task/get-all-tasks";
 import { getCurrentUser } from "../data/user/auth";
-import { TaskCardWrapper } from "@/components/tasks/task-card/task-card-wrappet";
+import { TaskCardWrapper } from "@/components/tasks/task-card/task-card-wrapper";
 import { CreateTaskDialog } from "@/components/tasks/create-task-dialog/create-task-wrapper";
-
+import Link from "next/link";
 
 export default async function TasksPage() {
-  const user = await getCurrentUser({ redirectIfNotFound: true, withFullUser:true });
+  const user = await getCurrentUser({
+    redirectIfNotFound: true,
+    withFullUser: true,
+  });
 
   const tasksResult =
     user.role === "admin" ? await getAllTasks() : await getMyTasks();
 
-  if (!tasksResult.success) {
+  if (tasksResult.status === "ERR") {
     return (
       <div className="container mx-auto py-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600">Error</h1>
-          <p className="text-gray-600 mt-2">{tasksResult.error}</p>
+          <p className="text-gray-600 mt-2">{tasksResult.message}</p>
         </div>
       </div>
     );
@@ -26,12 +29,19 @@ export default async function TasksPage() {
 
   const tasks = tasksResult.data;
 
+  // nums = [1,2,3,4,5]; nums.filter((num) => num > 2 ) 
   const pendingTasks = tasks?.filter((task) => task.status === "pending");
   const completedTasks = tasks?.filter((task) => task.status === "completed");
 
   return (
-    <div className="container max-w-6xl mx-auto py-8 px-4">
-      <div className="flex justify-between items-center mb-8">
+    <div className="container min-w-screen bg-green-200 max-w-6xl mx-auto py-8 px-4">
+      <div className="mb-8">
+        <Button asChild variant="outline">
+          <Link href="/">Kembali</Link>
+        </Button>
+      </div>
+
+      <div className="flex justify-between items-center mb-8 bg-amber-200">
         <div>
           <h1 className="text-3xl font-bold">
             {user.role === "admin" ? "All Tasks" : "My Tasks"}
@@ -42,7 +52,7 @@ export default async function TasksPage() {
               : "View and complete your assigned tasks"}
           </p>
         </div>
-
+        
         {user.role === "admin" && (
           <CreateTaskDialog>
             <Button>
@@ -74,6 +84,7 @@ export default async function TasksPage() {
           </p>
         </div>
       </div>
+
       {/* Task Lists */}
       <div className="space-y-8">
         {/* Pending Tasks */}
@@ -83,7 +94,8 @@ export default async function TasksPage() {
             Pending Tasks ({pendingTasks?.length ?? 0})
           </h2>
 
-          {(pendingTasks?.length ?? 0) === 0 ? (
+          {
+          (pendingTasks?.length ?? 0) === 0 ? (
             <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
               <p className="text-gray-500">No pending tasks</p>
             </div>
@@ -93,7 +105,8 @@ export default async function TasksPage() {
                 <TaskCardWrapper key={task.id} task={task} currentUser={user} />
               ))}
             </div>
-          )}
+          )
+          }
         </div>
 
         {/* Completed Tasks */}

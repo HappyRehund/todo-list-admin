@@ -10,20 +10,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signInSchema } from "@/schemas/auth";
+import { SignInInput, signInSchema } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import z from "zod";
 
 export function SignInForm() {
   const [error, setError] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   
-  const form = useForm<z.infer<typeof signInSchema>>({
+  const form = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: "",
@@ -31,7 +30,7 @@ export function SignInForm() {
     },
   });
 
-  async function onSubmit(data: z.infer<typeof signInSchema>) {
+  async function onSubmit(data: SignInInput) {
     try {
       setIsLoading(true);
       setError(undefined);

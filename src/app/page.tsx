@@ -1,14 +1,19 @@
 //src/app/page.tsx
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { getCurrentUser } from "@/app/data/user/auth";
-import { LogOutButton } from "@/modules/auth/log-out-button";
+import { LogOutButton } from "@/components/auth/log-out-button";
 import Link from "next/link";
 
-export default async function Home(){
-
+export default async function Home() {
   // const fullUser = null;
-  const fullUser = await getCurrentUser({ withFullUser: true})
+  const fullUser = await getCurrentUser({ withFullUser: true });
   return (
     <div className="container mx-auto p-4">
       {fullUser == null ? (
@@ -27,6 +32,9 @@ export default async function Home(){
             <CardDescription>Role: {fullUser.role}</CardDescription>
           </CardHeader>
           <CardFooter className="flex gap-4">
+            <Button>
+              <Link href="/tasks">Tasks Page</Link>
+            </Button>
             <Button asChild variant="outline">
               <Link href="/private">Private Page</Link>
             </Button>
@@ -40,5 +48,5 @@ export default async function Home(){
         </Card>
       )}
     </div>
-  )
+  );
 }

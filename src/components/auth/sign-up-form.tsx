@@ -10,18 +10,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signUpSchema } from "@/schemas/auth";
+import { SignUpinput, signUpSchema } from "@/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import z from "zod";
 
 export function SignUpForm() {
   const [error, setError] = useState<string>();
-  const [isPending, startTransition] = useTransition();
-  
-  const form = useForm<z.infer<typeof signUpSchema>>({
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const form = useForm<SignUpinput>({
     resolver: zodResolver(signUpSchema), // Tambahkan zodResolver
     defaultValues: {
       name: "",
@@ -30,27 +31,24 @@ export function SignUpForm() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof signUpSchema>) {
-    setError(undefined); // Clear previous errors
-    
-    startTransition(async () => {
-      try {
-        const result = await signUp(data);
-        if (result) {
-          setError(result);
-        }
-        // Jika result undefined/null, berarti berhasil dan akan redirect
-      } catch (err) {
-        // Handle NEXT_REDIRECT error (this is expected behavior for successful redirects)
-        if (err instanceof Error && err.message === 'NEXT_REDIRECT') {
-          // Don't set error for redirect - this means success
-          return;
-        }
-        
-        console.error("Sign up error:", err);
-        setError("An unexpected error occurred. Please try again.");
+  async function onSubmit(data: SignUpinput) {
+    try {
+      setIsLoading(true)
+      setError(undefined)
+
+      const result = await signUp(data);
+
+      if(result?.status === "ERR"){
+        setError(result.message);
+      } else if (result?.status === "OK") {
+        router.push("/")
+        router.refresh()
       }
-    });
+    } catch (error) {
+      setError(`An unexpected error occured ${error}`)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -61,15 +59,6 @@ export function SignUpForm() {
             <p className="text-destructive text-sm">{error}</p>
           </div>
         )}
-        
-        <div className="flex gap-4 justify-between">
-          <Button type="button" variant="outline" disabled={isPending}>
-            Discord
-          </Button>
-          <Button type="button" variant="outline" disabled={isPending}>
-            Github
-          </Button>
-        </div>
 
         {/* -- Name */}
         <FormField
@@ -82,7 +71,7 @@ export function SignUpForm() {
                 <Input 
                   type="text" 
                   placeholder="Enter your name"
-                  disabled={isPending}
+                  disabled={isLoading}
                   {...field} 
                 />
               </FormControl>
@@ -102,7 +91,7 @@ export function SignUpForm() {
                 <Input 
                   type="email" 
                   placeholder="Enter your email"
-                  disabled={isPending}
+                  disabled={isLoading}
                   {...field} 
                 />
               </FormControl>
@@ -122,7 +111,7 @@ export function SignUpForm() {
                 <Input 
                   type="password" 
                   placeholder="Enter your password"
-                  disabled={isPending}
+                  disabled={isLoading}
                   {...field} 
                 />
               </FormControl>
@@ -132,11 +121,11 @@ export function SignUpForm() {
         />
 
         <div className="flex gap-4 justify-end">
-          <Button asChild variant="link" disabled={isPending}>
+          <Button asChild variant="link" disabled={isLoading}>
             <Link href="/sign-in">Sign In</Link>
           </Button>
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Creating account..." : "Sign Up"}
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "Creating account..." : "Sign Up"}
           </Button>
         </div>
       </form>

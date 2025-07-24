@@ -28,13 +28,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createTask } from "@/actions/tasks/task-action";
-import { createTaskSchema } from "@/schemas/task";
+import { CreateTaskInput, createTaskSchema } from "@/schemas/task";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
-import { UserRole } from "@/generated/prisma"; 
+import { UserRole } from "@/generated/prisma/enums";
 
 interface User {
   id: string;
@@ -79,7 +78,7 @@ export function CreateTaskDialogContent({ children, users }: CreateTaskDialogCon
   const [error, setError] = useState<string>();
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof createTaskSchema>>({
+  const form = useForm<CreateTaskInput>({
     resolver: zodResolver(createTaskSchema),
     defaultValues: {
       title: "",
@@ -89,7 +88,7 @@ export function CreateTaskDialogContent({ children, users }: CreateTaskDialogCon
     },
   });
 
-  async function onSubmit(data: z.infer<typeof createTaskSchema>) {
+  async function onSubmit(data: CreateTaskInput) {
     setIsLoading(true);
     setError(undefined);
 

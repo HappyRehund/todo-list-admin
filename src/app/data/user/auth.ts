@@ -6,6 +6,8 @@ import { prisma } from "../../../lib/client/prisma";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 
+
+// Retrieve informasi dari database itu 
 type FullUser = Exclude<
   Awaited<ReturnType<typeof getUserFromDb>>,
   undefined | null

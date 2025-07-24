@@ -15,7 +15,15 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import z from "zod";
 
-export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
+interface AuthResponse {
+  status: "ERR" | "OK",
+  message: string  
+}
+
+// Array = [8, "saku", true]
+// Array<string> = ["saku", "baju"]
+
+export async function signIn(unsafeData: z.infer<typeof signInSchema>): Promise<AuthResponse> {
   try {
     const { success, data, error } = signInSchema.safeParse(unsafeData);
     if (!success) {
@@ -78,12 +86,15 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
   // redirect("/");
 }
 
-export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
+export async function signUp(unsafeData: z.infer<typeof signUpSchema>): Promise<AuthResponse> {
   try {
     const { success, data, error } = signUpSchema.safeParse(unsafeData);
     if (!success) {
       console.error("Validation error:", error);
-      return "Invalid input data";
+      return {
+        status: "ERR",
+        message: "Invalid input data"
+      }
     }
 
     // Check if user already exists
@@ -94,7 +105,10 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
     });
 
     if (existingUser != null) {
-      return "User already exists with this email";
+      return {
+        status: "ERR",
+        message: "User already exists with this email"
+      }
     }
 
     // Generate salt and hash password
@@ -117,26 +131,43 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
     });
 
     if (!user) {
-      return "Unable to create user";
+      return {
+        status: "ERR",
+        message: "User tidak dapat dibuat"
+      }
     }
 
     // Create session
     const cookieStore = await cookies();
     await createUserSession(user, cookieStore);
+
+    return {
+      status: "OK",
+      message: "User berhasil dibuat"
+    }
   } catch (error) {
     console.error("Sign up error:", error);
 
     // Handle specific Prisma errors
     if (error instanceof Error) {
       if (error.message.includes("Unique constraint")) {
-        return "Email already exists";
+        return {
+          status: "ERR",
+          message: "Email already exists"
+        }
       }
       if (error.message.includes("connect")) {
-        return "Database connection error";
+        return {
+          status: "ERR",
+          message: "Database connection error"
+        }
       }
     }
 
-    return "Unable to create account. Please try again.";
+    return {
+      status: "ERR",
+      message: "Unable to create account. Please try again."
+    }
   }
 
   redirect("/");

@@ -1,6 +1,6 @@
 import { getAllUsers } from "@/app/data/user/get-all-users";
 import { TaskCardClient } from "./task-card";
-import { UserRole } from "@/generated/prisma";
+import { UserRole } from "@/generated/prisma/enums"; 
 
 
 interface User {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { logOut } from "@/actions/auth/auth-action";
 import { Button } from "@/components/ui/button";
