@@ -20,9 +20,6 @@ interface AuthResponse {
   message: string  
 }
 
-// Array = [8, "saku", true]
-// Array<string> = ["saku", "baju"]
-
 export async function signIn(unsafeData: z.infer<typeof signInSchema>): Promise<AuthResponse> {
   try {
     const { success, data, error } = signInSchema.safeParse(unsafeData);
@@ -163,7 +160,6 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>): Promise<
         }
       }
     }
-
     return {
       status: "ERR",
       message: "Unable to create account. Please try again."
