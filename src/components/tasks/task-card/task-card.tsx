@@ -25,7 +25,7 @@ import {
 import { useState } from "react";
 import { UpdateTaskDialogContent } from "../update-task-dialog/update-task-dialog";
 import { useRouter } from "next/navigation";
-import { UserRole } from "../../../../prisma/app/generated/prisma/client/enums"; 
+import { UserRole } from "@/generated/prisma/enums";
 
 interface User {
   id: string;

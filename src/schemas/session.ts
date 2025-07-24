@@ -1,4 +1,4 @@
-import { UserRole } from "../../prisma/app/generated/prisma/client/enums"; 
+import { UserRole } from "@/generated/prisma/enums";
 import z from "zod";
 
 export const sessionSchema = z.object({
